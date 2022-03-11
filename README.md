@@ -29,25 +29,11 @@ kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ```
 
-Edit the argocd-server deployment and add `--insecure` to the container command.
+Web need to run argocd as `insecure` because we want the TLS to be terminated at the edge.
 
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app.kubernetes.io/component: server
-    app.kubernetes.io/name: argocd-server
-    app.kubernetes.io/part-of: argocd
-  name: argocd-server
-spec:
-  template:
-    spec:
-      containers:
-      - command:
-        - argocd-server
-        - --insecure
-...
+```sh
+kubectl apply -f argocd-cmd-params-cm.yaml
+kubectl rollout restart deployment argocd-server -n argocd
 ```
 
 ## Expose Web UI
