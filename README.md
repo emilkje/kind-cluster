@@ -44,13 +44,7 @@ Apply the argo-ingress resource
 kubectl apply -f argocd-ingress.yaml
 ```
 
- and add the following configuration to your `hosts` file
-
-```
-127.0.0.1   argocd.local
-```
-
-The UI should now be available at [http://argocd.local](http://argocd.local)
+The UI should now be available at [http://argocd.localhost](http://argocd.localhost)
 
 default username is **admin** and you can retrieve the default password with the following command
 
