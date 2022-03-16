@@ -46,7 +46,7 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 kubectl apply -f argocd-bootstrapper.yaml
 ```
 
-## Additional WSL considerations
+# Additional WSL considerations
 
 Kubernetes clusters are usually deployed with WSL on Windows. This means that services exposed through ingress controllers or node ports are inaccessible outside the local host. 
 
