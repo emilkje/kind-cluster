@@ -57,3 +57,29 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 ```sh
 kubectl apply -f argocd-bootstrapper.yaml
 ```
+
+## Additional WSL considerations
+
+Kubernetes clusters are usually deployed with WSL on Windows. This means that services exposed through ingress controllers or node ports are inaccessible outside the local host. 
+
+To reach services from outside the local machine e.g. from another host on the local network, you would need to set up a port proxy that binds a listening port on 0.0.0.0 on your host and forwards any traffic to the guest (WSL) on a desired destination port. We could easily expose web endpoints as follows:
+
+Find the WSL ip you want to forward to by logging into the wsl guest or by querying the ingress-controllers external ip:
+
+```sh
+kubectl get -n ingress-nginx svc ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+```
+
+Apply the port proxy on the windows machine by opening an elevated powershell terminal and run the following command
+
+```powershell
+netsh interface portproxy add v4tov4 listenport=80 listenaddress=0.0.0.0 connectport=80 connectaddress=<wsl-ip>
+```
+
+You can remove the forwarding rule with the following command if you need to change the configuration
+
+```powerhsell
+netsh interface portproxy delete v4tov4 listenport=80
+```
+
+Read more about the available [Netsh interface commands](https://docs.microsoft.com/en-us/windows-server/networking/technologies/netsh/netsh-interface-portproxy).
