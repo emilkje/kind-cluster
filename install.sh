@@ -19,19 +19,13 @@ kubectl wait --namespace ingress-nginx \
   --timeout=90s
 
 printf "\n${STAR}${COLOR}installing argocd...${NORMAL}\n"
-kubectl create namespace argocd
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl apply -k argocd
 
-printf "\n${STAR}${COLOR}configuring argocd...${NORMAL}\n"
-kubectl apply -f argocd-cmd-params-cm.yaml
-kubectl rollout restart deployment argocd-server -n argocd
+printf "\n${STAR}${COLOR}waiting for argocd to get ready...${NORMAL}\n"
 kubectl wait -n argocd \
   --for=condition=ready pod \
   --timeout=90s \
   --selector=app.kubernetes.io/name=argocd-server
-
-printf "\n${STAR}${COLOR}exposing web UI...${NORMAL}\n"
-kubectl apply -f argocd-ingress.yaml
 
 argo_password=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
 argo_host=$(kubectl -n argocd get ingress argocd-server-ingress -o jsonpath="{.spec.rules[0].host}")

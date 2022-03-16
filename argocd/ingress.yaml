@@ -2,7 +2,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: argocd-server-ingress
-  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-server-ingress
+    app.kubernetes.io/component: server-ingress
+    app.kubernetes.io/part-of: argocd
 spec:
   rules:
   - host: argocd.localhost

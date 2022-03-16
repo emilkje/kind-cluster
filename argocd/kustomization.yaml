@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# installation is based on the stable branch
+bases:
+  - https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+# place all resources in namespace argocd
+namespace: argocd
+
+# patch default resources
+patchesStrategicMerge:
+  - cmd-params-cm.yaml
+
+# add additional resources
+resources:
+  - namespace.yaml
+  - ingress.yaml

@@ -25,24 +25,12 @@ kubectl wait --namespace ingress-nginx \
 ## Install ArgoCD
 
 ```sh
-kubectl create namespace argocd
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl apply -k argocd
 ```
 
-Web need to run argocd as `insecure` because we want the TLS to be terminated at the edge.
+See [argocd directory](./argocd) for more information about the installation and custom pathces to the stable release. I.e we are configuring the deployment with the `--insecure` flag and exposing the web ui with an ingress resource.
 
-```sh
-kubectl apply -f argocd-cmd-params-cm.yaml
-kubectl rollout restart deployment argocd-server -n argocd
-```
-
-## Expose Web UI
-
-Apply the argo-ingress resource
-
-```sh
-kubectl apply -f argocd-ingress.yaml
-```
+## Access Web UI
 
 The UI should now be available at [http://argocd.localhost](http://argocd.localhost)
 
